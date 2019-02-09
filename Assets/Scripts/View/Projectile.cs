@@ -17,10 +17,7 @@ public class Projectile : MonoBehaviour {
 
         float stepMovement = model.speed * Time.fixedDeltaTime;
 
-        Debug.Log ("Projectile go to direction : " + direction + " at a speed of " + model.speed);
-        Debug.Log ("Projectile move : " + model.speed * Time.deltaTime + " unit every " + Time.fixedDeltaTime);
         this.direction *= stepMovement;
-        Debug.Log ("Projectile go to direction : " + new Vector3 (0f, 0.02f, 0f) + " at a speed of " + model.speed + " after ");
 
     }
 
