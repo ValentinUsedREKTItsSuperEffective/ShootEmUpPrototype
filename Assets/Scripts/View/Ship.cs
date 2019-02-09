@@ -6,6 +6,8 @@ public class Ship : MonoBehaviour {
 
     public GameObject projectilePrefab;
 
+    public GameObject shipRotation;
+
     Vector3 leftBottomCorner;
     Vector3 topRightCorner;
 
@@ -23,7 +25,7 @@ public class Ship : MonoBehaviour {
     void FixedUpdate() {
         if (Input.GetKey (KeyCode.Space)){
             if (shotCooldown <= EPSILON) {
-                Shoot (transform.position + new Vector3 (0f, 1f, 0f));
+                Shoot ();
                 shotCooldown = 1f / model.fireRate;
             } else {
                 shotCooldown -= Time.fixedDeltaTime;
@@ -37,8 +39,8 @@ public class Ship : MonoBehaviour {
         );
 	}
 
-	public void Shoot(Vector3 clickedPoint) {
-        Vector3 direction = clickedPoint - transform.position;
+	public void Shoot() {
+        Vector3 direction = transform.position - shipRotation.transform.position;
         Projectile p = Instantiate (projectilePrefab).GetComponent<Projectile> ();
         p.transform.position = transform.position;
         direction.Normalize ();
