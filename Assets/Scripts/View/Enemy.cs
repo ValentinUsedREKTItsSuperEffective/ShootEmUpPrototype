@@ -27,6 +27,6 @@ public class Enemy : MonoBehaviour {
         Projectile p = Instantiate (projectilePrefab).GetComponent<Projectile> ();
         p.transform.position = transform.position;
         direction.Normalize ();
-        p.InitProjectile (direction);
+        p.InitProjectile (direction, tag);
     }
 }

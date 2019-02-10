@@ -10,7 +10,6 @@ public class ShipRotation : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
         if (Input.GetKey (KeyCode.LeftArrow)) {
-            Debug.Log (transform.rotation.z);
             if(transform.rotation.z > rotationZLimit) {
                 return;
             }
