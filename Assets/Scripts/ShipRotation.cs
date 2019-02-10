@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ShipRotation : MonoBehaviour {
     
-    public BaseEntity player;
+    public EntityModel player;
 
     private readonly float rotationZLimit = 12f*Mathf.PI/360f;
 	

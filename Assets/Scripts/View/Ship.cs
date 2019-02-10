@@ -2,7 +2,7 @@
 
 public class Ship : MonoBehaviour {
 
-    public BaseEntity model;
+    public EntityModel model;
 
     public GameObject projectilePrefab;
 

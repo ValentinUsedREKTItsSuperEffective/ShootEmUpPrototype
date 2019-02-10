@@ -1,4 +1,4 @@
-﻿public class EnemyModel : BaseEntity {
+﻿public class EnemyModel : EntityModel {
 
     int fireDamage;
 
