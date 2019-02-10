@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Ship : MonoBehaviour {
+public class Ship : BaseEntity {
 
     public EntityModel model;
 
@@ -44,5 +44,9 @@ public class Ship : MonoBehaviour {
         p.transform.position = transform.position;
         direction.Normalize ();
         p.InitProjectile (direction, tag);
+    }
+
+    public override void Hit(Projectile projectile){
+        Debug.Log ("Ship receive : " + projectile.model.damage + " damages !");
     }
 }

@@ -1,15 +1,11 @@
 ﻿using UnityEngine;
 
-public class Enemy : MonoBehaviour {
+public class Enemy : BaseEntity {
 
     public GameObject projectilePrefab;
     public GameObject player;
 
     float reloadingTime;
-
-    public void HitBy(Projectile p){
-        Debug.Log ("Receive : " + p.model.damage + " damages !");
-    }
      
     void Update() {
         float reloadTime = 2f;
@@ -28,5 +24,9 @@ public class Enemy : MonoBehaviour {
         p.transform.position = transform.position;
         direction.Normalize ();
         p.InitProjectile (direction, tag);
+    }
+
+    public override void Hit(Projectile projectile) {
+        Debug.Log ("Enemy receive : " + projectile.model.damage + " damages !");
     }
 }

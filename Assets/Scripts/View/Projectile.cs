@@ -32,10 +32,11 @@ public class Projectile : MonoBehaviour {
 	}
 
     void OnTriggerEnter2D(Collider2D other) {
-        Enemy enemy = other.GetComponent<Enemy> ();
+        BaseEntity entity = other.GetComponent<BaseEntity> ();
+        Debug.Log ("COLLIDE");
 
-        if (enemy != null && entityTag != enemy.tag) {
-            enemy.HitBy (this);
+        if (entity != null && entityTag != entity.tag) {
+            entity.Hit (this);
             Destroy (gameObject);
         }
 	}
