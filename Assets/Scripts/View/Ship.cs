@@ -23,12 +23,11 @@ public class Ship : MonoBehaviour {
 	}
 
     void FixedUpdate() {
+        shotCooldown -= Time.fixedDeltaTime;
         if (Input.GetKey (KeyCode.Space)){
             if (shotCooldown <= EPSILON) {
                 Shoot ();
                 shotCooldown = 1f / model.fireRate;
-            } else {
-                shotCooldown -= Time.fixedDeltaTime;
             }
         }
 
