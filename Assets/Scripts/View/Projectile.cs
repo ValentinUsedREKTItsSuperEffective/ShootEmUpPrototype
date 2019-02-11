@@ -26,7 +26,7 @@ public class Projectile : MonoBehaviour {
 	void FixedUpdate() {
         transform.position += direction;
 
-        if (transform.position.y > topPoint) {
+        if (transform.position.y > topPoint || transform.position.y < -18) {
             Destroy (gameObject);
         }
 	}
