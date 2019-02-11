@@ -5,8 +5,10 @@ public class Enemy : BaseEntity {
     public GameObject projectilePrefab;
     public GameObject player;
 
+    [HideInInspector] public EnemyGenerator generator;
+
     float reloadingTime;
-     
+
     void Update() {
         float reloadTime = 2f;
 
@@ -28,5 +30,7 @@ public class Enemy : BaseEntity {
 
     public override void Hit(Projectile projectile) {
         Debug.Log ("Enemy receive : " + projectile.model.damage + " damages !");
+        Destroy (transform.parent.gameObject);
+        generator.onEnemyKilled.OnNext (UniRx.Unit.Default);
     }
 }
