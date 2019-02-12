@@ -17,6 +17,7 @@ public class Ship : BaseEntity {
 
 	void Awake() {
         shotCooldown = 0f;
+        currentShield = model.shield;
 
         topRightCorner = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0.0f));
         leftBottomCorner = topRightCorner * -1f;
@@ -24,6 +25,13 @@ public class Ship : BaseEntity {
 
     void FixedUpdate() {
         shotCooldown -= Time.fixedDeltaTime;
+
+        if(currentShield < model.shield) {
+            currentShield += model.shieldRegen * Time.fixedDeltaTime;
+        } else {
+            currentShield = model.shield;
+        }
+
         if (Input.GetKey (KeyCode.Space)){
             if (shotCooldown <= EPSILON) {
                 Shoot ();
@@ -47,6 +55,17 @@ public class Ship : BaseEntity {
     }
 
     public override void Hit(Projectile projectile){
-        Debug.Log ("Ship receive : " + projectile.model.damage + " damages !");
+        if(currentShield > 0) {
+            currentShield -= projectile.model.damage;
+
+            if(currentShield < 0) {
+                model.life += currentShield;
+                currentShield = 0;
+            }
+        } else {
+            model.life -= projectile.model.damage;
+        }
+
+        Debug.Log ("Ship Shield : " + currentShield + ", Life : " + model.life);
     }
 }
