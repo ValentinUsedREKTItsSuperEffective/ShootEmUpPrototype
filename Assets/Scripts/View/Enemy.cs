@@ -30,7 +30,11 @@ public class Enemy : BaseEntity {
 
     public override void Hit(Projectile projectile) {
         Debug.Log ("Enemy receive : " + projectile.model.damage + " damages !");
-        Destroy (transform.parent.gameObject);
-        generator.onEnemyKilled.OnNext (UniRx.Unit.Default);
+        currentLife -= projectile.model.damage;
+
+        if (currentLife <= 0){
+            Destroy (transform.parent.gameObject);
+            generator.onEnemyKilled.OnNext (UniRx.Unit.Default);
+        }
     }
 }

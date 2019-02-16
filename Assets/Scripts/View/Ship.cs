@@ -2,8 +2,6 @@
 
 public class Ship : BaseEntity {
 
-    public EntityModel model;
-
     public GameObject projectilePrefab;
 
     public GameObject shipRotation;
@@ -17,6 +15,7 @@ public class Ship : BaseEntity {
 
 	void Awake() {
         shotCooldown = 0f;
+        currentLife = model.life;
         currentShield = model.shield;
 
         topRightCorner = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0.0f));
@@ -59,11 +58,11 @@ public class Ship : BaseEntity {
             currentShield -= projectile.model.damage;
 
             if(currentShield < 0) {
-                model.life += currentShield;
+                currentLife += currentShield;
                 currentShield = 0;
             }
         } else {
-            model.life -= projectile.model.damage;
+            currentLife -= projectile.model.damage;
         }
 
         Debug.Log ("Ship Shield : " + currentShield + ", Life : " + model.life);
