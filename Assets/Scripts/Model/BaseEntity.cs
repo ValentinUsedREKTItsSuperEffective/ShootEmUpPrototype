@@ -7,5 +7,16 @@ public abstract class BaseEntity : MonoBehaviour {
     protected float currentLife;
     protected float currentShield;
     
-    public abstract void Hit(Projectile projectile);
+    public virtual void Hit(Projectile projectile) {
+        if (currentShield > 0) {
+            currentShield -= projectile.model.damage;
+
+            if (currentShield < 0) {
+                currentLife += currentShield;
+                currentShield = 0;
+            }
+        } else {
+            currentLife -= projectile.model.damage;
+        }
+    }
 }

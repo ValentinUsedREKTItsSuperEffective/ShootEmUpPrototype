@@ -29,8 +29,8 @@ public class Enemy : BaseEntity {
     }
 
     public override void Hit(Projectile projectile) {
+        base.Hit (projectile);
         Debug.Log ("Enemy receive : " + projectile.model.damage + " damages !");
-        currentLife -= projectile.model.damage;
 
         if (currentLife <= 0){
             Destroy (transform.parent.gameObject);

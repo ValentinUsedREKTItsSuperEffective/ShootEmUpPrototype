@@ -54,16 +54,7 @@ public class Ship : BaseEntity {
     }
 
     public override void Hit(Projectile projectile){
-        if(currentShield > 0) {
-            currentShield -= projectile.model.damage;
-
-            if(currentShield < 0) {
-                currentLife += currentShield;
-                currentShield = 0;
-            }
-        } else {
-            currentLife -= projectile.model.damage;
-        }
+        base.Hit (projectile);
 
         Debug.Log ("Ship Shield : " + currentShield + ", Life : " + model.life);
     }
