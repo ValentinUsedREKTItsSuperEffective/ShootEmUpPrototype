@@ -8,17 +8,29 @@ public class EnemyGenerator : MonoBehaviour {
 
     public EnemyWave wave;
 
-    public Subject<Unit> onEnemyKilled;
+    public Subject<int> onEnemyKilled;
 
-    private int remainingEnemy;
+    int remainingEnemy;
+
+    int spaceAngleSize;
+    int halfSpaceAngleSize;
+    bool[] enemyPartitionSpace;
 
 	// Use this for initialization
 	void Start () {
         remainingEnemy = 0;
 
-        onEnemyKilled = new Subject<Unit> ();
-        onEnemyKilled.Subscribe (_ => {
+        spaceAngleSize = 24; 
+        halfSpaceAngleSize = spaceAngleSize / 2; // for change range of indexes
+        enemyPartitionSpace = new bool[spaceAngleSize];
+        for (int i = 0; i < spaceAngleSize; i++){
+            enemyPartitionSpace.SetValue (true, i);
+        }
+
+        onEnemyKilled = new Subject<int> ();
+        onEnemyKilled.Subscribe (index => {
             remainingEnemy--;
+            enemyPartitionSpace[index] = true;
 
             if(remainingEnemy == 0) {
                 Generate ();
@@ -37,7 +49,15 @@ public class EnemyGenerator : MonoBehaviour {
                 Enemy enemy = enemyPivot.transform.Find ("Enemy").GetComponent<Enemy> ();
                 enemy.player = player;
                 enemy.generator = this;
-                enemyPivot.transform.Rotate (new Vector3 (0, 0, Random.Range (-12, 12)));
+
+                int angleIndex = Random.Range (0, spaceAngleSize);
+                while(enemyPartitionSpace[angleIndex] == false) {
+                    angleIndex = Random.Range (0, spaceAngleSize);
+                }
+
+                enemyPartitionSpace[angleIndex] = false;
+                enemy.spaceIndex = angleIndex;
+                enemyPivot.transform.Rotate (new Vector3 (0, 0, angleIndex - halfSpaceAngleSize));
             }
         }
     }

@@ -6,6 +6,7 @@ public class Enemy : BaseEntity {
     public GameObject player;
 
     [HideInInspector] public EnemyGenerator generator;
+    [HideInInspector] public int spaceIndex;
 
     float reloadingTime;
 
@@ -34,7 +35,7 @@ public class Enemy : BaseEntity {
 
         if (currentLife <= 0){
             Destroy (transform.parent.gameObject);
-            generator.onEnemyKilled.OnNext (UniRx.Unit.Default);
+            generator.onEnemyKilled.OnNext (spaceIndex);
         }
     }
 }
