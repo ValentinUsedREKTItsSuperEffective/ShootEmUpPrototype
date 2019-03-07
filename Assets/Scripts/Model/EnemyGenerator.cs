@@ -17,10 +17,10 @@ public class EnemyGenerator : MonoBehaviour {
     bool[] enemyPartitionSpace;
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
         remainingEnemy = 0;
 
-        spaceAngleSize = 24; 
+        spaceAngleSize = 6; 
         halfSpaceAngleSize = spaceAngleSize / 2; // for change range of indexes
         enemyPartitionSpace = new bool[spaceAngleSize];
         for (int i = 0; i < spaceAngleSize; i++){
@@ -36,6 +36,7 @@ public class EnemyGenerator : MonoBehaviour {
                 Generate ();
             }
         });
+
         Generate ();
 	}
 
@@ -43,21 +44,21 @@ public class EnemyGenerator : MonoBehaviour {
         foreach(WaveInfo info in wave.enemies){ // don't use foreach, choose a type of wave instead
             remainingEnemy = info.number;
 
-            for (int i = 0; i < info.number; i++){
+            for (int i = 0; i < info.number; i++) {
                 GameObject enemyPivot = Instantiate (info.prefab);
                 enemyPivot.transform.parent = planet.transform;
                 Enemy enemy = enemyPivot.transform.Find ("Enemy").GetComponent<Enemy> ();
                 enemy.player = player;
                 enemy.generator = this;
 
-                int angleIndex = Random.Range (0, spaceAngleSize);
-                while(enemyPartitionSpace[angleIndex] == false) {
+                int angleIndex;
+                do {
                     angleIndex = Random.Range (0, spaceAngleSize);
-                }
+                } while (enemyPartitionSpace[angleIndex] == false);
 
                 enemyPartitionSpace[angleIndex] = false;
                 enemy.spaceIndex = angleIndex;
-                enemyPivot.transform.Rotate (new Vector3 (0, 0, angleIndex - halfSpaceAngleSize));
+                enemyPivot.transform.Rotate (new Vector3 (0, 0, (angleIndex - halfSpaceAngleSize)*4));
             }
         }
     }
