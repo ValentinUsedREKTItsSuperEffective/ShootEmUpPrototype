@@ -7,6 +7,7 @@ public class EnemyGenerator : MonoBehaviour {
     public GameObject planet;
 
     public EnemyWave wave;
+    WaveInfo currentWave;
 
     public Subject<int> onEnemyKilled;
 
@@ -16,8 +17,12 @@ public class EnemyGenerator : MonoBehaviour {
     int halfSpaceAngleSize;
     bool[] enemyPartitionSpace;
 
+    float respawnTimer;
+
 	// Use this for initialization
 	void Start() {
+        respawnTimer = 0;
+
         remainingEnemy = 0;
 
         spaceAngleSize = 6; 
@@ -29,37 +34,59 @@ public class EnemyGenerator : MonoBehaviour {
 
         onEnemyKilled = new Subject<int> ();
         onEnemyKilled.Subscribe (index => {
-            remainingEnemy--;
             enemyPartitionSpace[index] = true;
 
-            if(remainingEnemy == 0) {
-                Generate ();
-            }
+            // if remaining ennemies == 0 go to the next wave
         });
 
-        Generate ();
+        if (currentWave == null) {
+            currentWave = wave.enemies[0];
+            remainingEnemy = currentWave.number;
+        }
+
+        Generate (currentWave.initialNumber);
 	}
 
-    void Generate(){
-        foreach(WaveInfo info in wave.enemies){ // don't use foreach, choose a type of wave instead
-            remainingEnemy = info.number;
+    void Update() {
+        respawnTimer += Time.deltaTime;
 
-            for (int i = 0; i < info.number; i++) {
-                GameObject enemyPivot = Instantiate (info.prefab);
-                enemyPivot.transform.parent = planet.transform;
-                Enemy enemy = enemyPivot.transform.Find ("Enemy").GetComponent<Enemy> ();
-                enemy.player = player;
-                enemy.generator = this;
+        while(respawnTimer > currentWave.respawnRate){
+            respawnTimer -= currentWave.respawnRate;
 
-                int angleIndex;
-                do {
-                    angleIndex = Random.Range (0, spaceAngleSize);
-                } while (enemyPartitionSpace[angleIndex] == false);
-
-                enemyPartitionSpace[angleIndex] = false;
-                enemy.spaceIndex = angleIndex;
-                enemyPivot.transform.Rotate (new Vector3 (0, 0, (angleIndex - halfSpaceAngleSize)*4));
+            if(remainingEnemy > 0 && HaveSpace ()){
+                Generate (1);
             }
+        }
+    }
+
+    bool HaveSpace(){
+        for (int i = 0; i < enemyPartitionSpace.Length; i++){
+            if(enemyPartitionSpace[i] == true){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void Generate(int firstSpawn){
+        for (int i = 0; i < firstSpawn; i++) {
+            GameObject enemyPivot = Instantiate (currentWave.prefab);
+            enemyPivot.transform.parent = planet.transform;
+            Enemy enemy = enemyPivot.transform.Find ("Enemy").GetComponent<Enemy> ();
+            enemy.player = player;
+            enemy.generator = this;
+
+            int angleIndex;
+            do {
+                angleIndex = Random.Range (0, spaceAngleSize);
+            } while (enemyPartitionSpace[angleIndex] == false);
+
+            enemyPartitionSpace[angleIndex] = false;
+            enemy.spaceIndex = angleIndex;
+            enemyPivot.transform.Rotate (new Vector3 (0, 0, (angleIndex - halfSpaceAngleSize)*4));
+
+            remainingEnemy--;
         }
     }
 }

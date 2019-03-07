@@ -7,11 +7,12 @@ public class WaveInfo {
     public EntityModel enemyType;
     public GameObject prefab;
     public int number;
+    public float respawnRate;
+    public int initialNumber;
 }
 
 [CreateAssetMenu (fileName = "EnemyWave", menuName = "ScriptableObjects/EnemyWave", order = 2)]
 public class EnemyWave : ScriptableObject {
 
     public List<WaveInfo> enemies;
-
 }
