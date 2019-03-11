@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using DG.Tweening;
 
 public class Enemy : BaseEntity {
 
@@ -19,6 +20,13 @@ public class Enemy : BaseEntity {
             reloadingTime = 0f;
             Shoot ();
         }
+    }
+
+    public void PerformArrival(){
+        transform.localScale.Set(1, 3, 1);
+        transform.DOMoveY (5, 0.4f).From(true).SetEase (Ease.OutQuint);
+        transform.DOScaleY (1, 0.4f).From(true);
+        transform.DOPlay ();
     }
 
     void Shoot() {

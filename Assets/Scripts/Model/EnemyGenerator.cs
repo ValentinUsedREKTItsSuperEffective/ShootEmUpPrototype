@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UniRx;
+using DG.Tweening;
 
 public class EnemyGenerator : MonoBehaviour {
 
@@ -21,6 +22,9 @@ public class EnemyGenerator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
+        // !BETTER NOT DOING THIS HERE!
+        DOTween.Init ();
+
         respawnTimer = 0;
 
         remainingEnemy = 0;
@@ -85,6 +89,7 @@ public class EnemyGenerator : MonoBehaviour {
             enemyPartitionSpace[angleIndex] = false;
             enemy.spaceIndex = angleIndex;
             enemyPivot.transform.Rotate (new Vector3 (0, 0, (angleIndex - halfSpaceAngleSize)*4));
+            enemy.PerformArrival ();
 
             remainingEnemy--;
         }
