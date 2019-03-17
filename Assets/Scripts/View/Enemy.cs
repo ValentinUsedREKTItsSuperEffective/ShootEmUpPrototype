@@ -22,9 +22,9 @@ public class Enemy : BaseEntity {
         }
     }
 
-    public void PerformArrival(){
+    public void PerformArrival(Vector3 finalPosition){
         transform.localScale.Set(1, 3, 1);
-        transform.DOMoveY (5, 0.4f).From(true).SetEase (Ease.OutQuint);
+        transform.DOMove (finalPosition, 0.4f).From (true).SetEase (Ease.OutQuint);
         transform.DOScaleY (1, 0.4f).From(true);
         transform.DOPlay ();
     }

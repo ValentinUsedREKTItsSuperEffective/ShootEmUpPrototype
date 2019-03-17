@@ -29,7 +29,7 @@ public class EnemyGenerator : MonoBehaviour {
 
         remainingEnemy = 0;
 
-        spaceAngleSize = 6; 
+        spaceAngleSize = 7; 
         halfSpaceAngleSize = spaceAngleSize / 2; // for change range of indexes
         enemyPartitionSpace = new bool[spaceAngleSize];
         for (int i = 0; i < spaceAngleSize; i++){
@@ -89,7 +89,11 @@ public class EnemyGenerator : MonoBehaviour {
             enemyPartitionSpace[angleIndex] = false;
             enemy.spaceIndex = angleIndex;
             enemyPivot.transform.Rotate (new Vector3 (0, 0, (angleIndex - halfSpaceAngleSize)*4));
-            enemy.PerformArrival ();
+
+            Vector3 finalPosition = enemy.transform.position - planet.transform.position;
+            finalPosition.Normalize ();
+            finalPosition *= 4f;
+            enemy.PerformArrival (finalPosition);
 
             remainingEnemy--;
         }
