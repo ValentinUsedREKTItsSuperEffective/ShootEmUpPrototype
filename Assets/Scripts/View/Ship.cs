@@ -56,6 +56,6 @@ public class Ship : BaseEntity {
     public override void Hit(Projectile projectile){
         base.Hit (projectile);
 
-        Debug.Log ("Ship Shield : " + currentShield + ", Life : " + model.life);
+        //Debug.Log ("Ship Shield : " + currentShield + ", Life : " + model.life);
     }
 }

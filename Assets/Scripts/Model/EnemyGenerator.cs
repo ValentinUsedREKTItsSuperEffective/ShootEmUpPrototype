@@ -15,6 +15,7 @@ public class EnemyGenerator : MonoBehaviour {
 
     public Subject<int> onEnemyKilled;
 
+    int remainingSpawn;
     int remainingEnemy;
 
     int spaceAngleSize;
@@ -37,6 +38,7 @@ public class EnemyGenerator : MonoBehaviour {
 
         onEnemyKilled = new Subject<int> ();
         onEnemyKilled.Subscribe (index => {
+            remainingEnemy--;
             enemyPartitionSpace[index] = true;
 
             if(remainingEnemy == 0){
@@ -59,7 +61,7 @@ public class EnemyGenerator : MonoBehaviour {
         while(respawnTimer > currentWaveInfo.respawnRate){
             respawnTimer -= currentWaveInfo.respawnRate;
 
-            if(remainingEnemy > 0 && HaveSpace ()){
+            if(remainingSpawn > 0 && HaveSpace ()){
                 Generate (1);
             }
         }
@@ -78,7 +80,7 @@ public class EnemyGenerator : MonoBehaviour {
     void InitializeNextWave(){
         currentWave = waves[waveIndex];
         currentWaveInfo = currentWave.infos[0];
-        remainingEnemy = currentWaveInfo.number;
+        remainingSpawn = remainingEnemy = currentWaveInfo.number;
         respawnTimer = 0;
 
         Generate (currentWaveInfo.initialNumber);
@@ -106,7 +108,7 @@ public class EnemyGenerator : MonoBehaviour {
             finalPosition *= 4f;
             enemy.PerformArrival (finalPosition);
 
-            remainingEnemy--;
+            remainingSpawn--;
         }
     }
 }
