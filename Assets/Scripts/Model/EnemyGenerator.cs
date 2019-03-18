@@ -28,8 +28,6 @@ public class EnemyGenerator : MonoBehaviour {
         // !BETTER NOT DOING THIS HERE!
         DOTween.Init ();
 
-        respawnTimer = 0;
-
         spaceAngleSize = 7; 
         halfSpaceAngleSize = spaceAngleSize / 2; // for change range of indexes
         enemyPartitionSpace = new bool[spaceAngleSize];
@@ -46,20 +44,13 @@ public class EnemyGenerator : MonoBehaviour {
 
                 if(waveIndex < waves.Count){
                     Debug.Log ("Wave : " + waveIndex);
-                    currentWave = waves[waveIndex];
-                    currentWaveInfo = currentWave.infos[0];
-                    remainingEnemy = currentWaveInfo.number;
-                    respawnTimer = 0;
+                    InitializeNextWave ();
                 }
             }
         });
 
         waveIndex = 0;
-        currentWave = waves[waveIndex];
-        currentWaveInfo = currentWave.infos[0];
-        remainingEnemy = currentWaveInfo.number;
-
-        Generate (currentWaveInfo.initialNumber);
+        InitializeNextWave ();
 	}
 
     void Update() {
@@ -84,8 +75,17 @@ public class EnemyGenerator : MonoBehaviour {
         return false;
     }
 
-    void Generate(int firstSpawn){
-        for (int i = 0; i < firstSpawn; i++) {
+    void InitializeNextWave(){
+        currentWave = waves[waveIndex];
+        currentWaveInfo = currentWave.infos[0];
+        remainingEnemy = currentWaveInfo.number;
+        respawnTimer = 0;
+
+        Generate (currentWaveInfo.initialNumber);
+    }
+
+    void Generate(int numberOfEnnemies){
+        for (int i = 0; i < numberOfEnnemies; i++) {
             GameObject enemyPivot = Instantiate (currentWaveInfo.prefab);
             enemyPivot.transform.parent = planet.transform;
             Enemy enemy = enemyPivot.transform.Find ("Enemy").GetComponent<Enemy> ();
