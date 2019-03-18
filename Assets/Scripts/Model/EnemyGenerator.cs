@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using UniRx;
 using DG.Tweening;
 
@@ -7,8 +8,10 @@ public class EnemyGenerator : MonoBehaviour {
     public GameObject player;
     public GameObject planet;
 
-    public EnemyWave wave;
-    WaveInfo currentWave;
+    public List<EnemyWave> waves;
+    EnemyWave currentWave;
+    int waveIndex;
+    WaveInfo currentWaveInfo;
 
     public Subject<int> onEnemyKilled;
 
@@ -27,8 +30,6 @@ public class EnemyGenerator : MonoBehaviour {
 
         respawnTimer = 0;
 
-        remainingEnemy = 0;
-
         spaceAngleSize = 7; 
         halfSpaceAngleSize = spaceAngleSize / 2; // for change range of indexes
         enemyPartitionSpace = new bool[spaceAngleSize];
@@ -40,22 +41,32 @@ public class EnemyGenerator : MonoBehaviour {
         onEnemyKilled.Subscribe (index => {
             enemyPartitionSpace[index] = true;
 
-            // if remaining ennemies == 0 go to the next wave
+            if(remainingEnemy == 0){
+                waveIndex++;
+
+                if(waveIndex < waves.Count){
+                    Debug.Log ("Wave : " + waveIndex);
+                    currentWave = waves[waveIndex];
+                    currentWaveInfo = currentWave.enemies[0];
+                    remainingEnemy = currentWaveInfo.number;
+                    respawnTimer = 0;
+                }
+            }
         });
 
-        if (currentWave == null) {
-            currentWave = wave.enemies[0];
-            remainingEnemy = currentWave.number;
-        }
+        waveIndex = 0;
+        currentWave = waves[waveIndex];
+        currentWaveInfo = currentWave.enemies[0];
+        remainingEnemy = currentWaveInfo.number;
 
-        Generate (currentWave.initialNumber);
+        Generate (currentWaveInfo.initialNumber);
 	}
 
     void Update() {
         respawnTimer += Time.deltaTime;
 
-        while(respawnTimer > currentWave.respawnRate){
-            respawnTimer -= currentWave.respawnRate;
+        while(respawnTimer > currentWaveInfo.respawnRate){
+            respawnTimer -= currentWaveInfo.respawnRate;
 
             if(remainingEnemy > 0 && HaveSpace ()){
                 Generate (1);
@@ -75,7 +86,7 @@ public class EnemyGenerator : MonoBehaviour {
 
     void Generate(int firstSpawn){
         for (int i = 0; i < firstSpawn; i++) {
-            GameObject enemyPivot = Instantiate (currentWave.prefab);
+            GameObject enemyPivot = Instantiate (currentWaveInfo.prefab);
             enemyPivot.transform.parent = planet.transform;
             Enemy enemy = enemyPivot.transform.Find ("Enemy").GetComponent<Enemy> ();
             enemy.player = player;
