@@ -47,7 +47,7 @@ public class EnemyGenerator : MonoBehaviour {
                 if(waveIndex < waves.Count){
                     Debug.Log ("Wave : " + waveIndex);
                     currentWave = waves[waveIndex];
-                    currentWaveInfo = currentWave.enemies[0];
+                    currentWaveInfo = currentWave.infos[0];
                     remainingEnemy = currentWaveInfo.number;
                     respawnTimer = 0;
                 }
@@ -56,7 +56,7 @@ public class EnemyGenerator : MonoBehaviour {
 
         waveIndex = 0;
         currentWave = waves[waveIndex];
-        currentWaveInfo = currentWave.enemies[0];
+        currentWaveInfo = currentWave.infos[0];
         remainingEnemy = currentWaveInfo.number;
 
         Generate (currentWaveInfo.initialNumber);

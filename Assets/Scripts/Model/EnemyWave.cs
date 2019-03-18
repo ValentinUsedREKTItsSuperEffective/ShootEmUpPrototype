@@ -14,5 +14,5 @@ public class WaveInfo {
 [CreateAssetMenu (fileName = "EnemyWave", menuName = "ScriptableObjects/EnemyWave", order = 2)]
 public class EnemyWave : ScriptableObject {
 
-    public List<WaveInfo> enemies;
+    public List<WaveInfo> infos;
 }
