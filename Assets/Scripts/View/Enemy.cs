@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Enemy : BaseEntity {
+public abstract class Enemy : BaseEntity {
 
     [HideInInspector] public EnemyGenerator generator;
     [HideInInspector] public int spaceIndex;
@@ -13,4 +13,6 @@ public class Enemy : BaseEntity {
             generator.onEnemyKilled.OnNext (spaceIndex);
         }
     }
+
+    public abstract void Generate();
 }

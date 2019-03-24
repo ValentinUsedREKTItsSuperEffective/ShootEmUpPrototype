@@ -9,6 +9,10 @@ public class Shooter : Enemy {
     float reloadingTime;
     bool invulnerability;
 
+    public override void Generate(){
+        
+    }
+
     void Update() {
         float reloadTime = 2f;
 

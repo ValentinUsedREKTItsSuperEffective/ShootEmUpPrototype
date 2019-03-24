@@ -8,6 +8,10 @@ public class Asteroid : Enemy {
         direction = new Vector3 ();
     }
 
+    public override void Generate() {
+
+    }
+
     void Update () {
         transform.position = new Vector3 (
             transform.position.x + direction.x*model.speed*Time.deltaTime, 

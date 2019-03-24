@@ -83,16 +83,19 @@ public class EnemyGenerator : MonoBehaviour {
         remainingSpawn = remainingEnemy = currentWaveInfo.number;
         respawnTimer = 0;
 
+        // TODO : Generate enemy of each type
         Generate (currentWaveInfo.initialNumber);
     }
 
+    // TODO : Rendre la fonction Generate propre à la classe Enemy + fonction abstraite, chaque classe fille réecrit sa facon de s'instancier
+    // TODO : Generer un ennemi de chaque type
     void Generate(int numberOfEnnemies){
         for (int i = 0; i < numberOfEnnemies; i++) {
             GameObject enemyPivot = Instantiate (currentWaveInfo.prefab);
             enemyPivot.transform.parent = planet.transform;
-            Shooter enemy = enemyPivot.transform.Find ("Shooter").GetComponent<Shooter> ();
-            enemy.player = player;
-            enemy.generator = this;
+            Shooter shooter = enemyPivot.transform.Find ("Shooter").GetComponent<Shooter> ();
+            shooter.player = player;
+            shooter.generator = this;
 
             int angleIndex;
             do {
@@ -100,13 +103,13 @@ public class EnemyGenerator : MonoBehaviour {
             } while (enemyPartitionSpace[angleIndex] == false);
 
             enemyPartitionSpace[angleIndex] = false;
-            enemy.spaceIndex = angleIndex;
+            shooter.spaceIndex = angleIndex;
             enemyPivot.transform.Rotate (new Vector3 (0, 0, (angleIndex - halfSpaceAngleSize)*4));
 
-            Vector3 finalPosition = enemy.transform.position - planet.transform.position;
+            Vector3 finalPosition = shooter.transform.position - planet.transform.position;
             finalPosition.Normalize ();
             finalPosition *= 4f;
-            enemy.PerformArrival (finalPosition);
+            shooter.PerformArrival (finalPosition);
 
             remainingSpawn--;
         }
