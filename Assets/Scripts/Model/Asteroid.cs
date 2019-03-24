@@ -1,11 +1,8 @@
 ﻿using UnityEngine;
 
-public class Asteroid : BaseEntity {
+public class Asteroid : Enemy {
 
     [HideInInspector] public Vector3 direction;
-
-    [HideInInspector] public EnemyGenerator generator; // Duplicate with ENEMY class
-    [HideInInspector] public int spaceIndex; // Duplicate with ENEMY class
 
     void Awake() {
         direction = new Vector3 ();
@@ -18,14 +15,4 @@ public class Asteroid : BaseEntity {
             transform.position.z
         );
 	}
-
-    // Duplicate with ENEMY class
-    public override void Hit(Projectile projectile) {
-        base.Hit (projectile);
-
-        if (currentLife <= 0) {
-            Destroy (transform.parent.gameObject);
-            generator.onEnemyKilled.OnNext (spaceIndex);
-        }
-    }
 }
