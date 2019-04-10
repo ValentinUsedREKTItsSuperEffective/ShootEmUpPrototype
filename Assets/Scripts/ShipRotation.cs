@@ -1,9 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ShipRotation : MonoBehaviour {
-    
+
     public EntityModel player;
+    public Transform planet;
 
     private readonly float rotationZLimit = 12f*Mathf.PI/360f;
 	
@@ -14,7 +14,7 @@ public class ShipRotation : MonoBehaviour {
                 return;
             }
 
-            transform.Rotate(new Vector3(0, 0, player.speed));
+            transform.RotateAround (planet.position, new Vector3 (0, 0, 1), player.speed);
         }
 
         if (Input.GetKey (KeyCode.RightArrow)) {
@@ -22,7 +22,7 @@ public class ShipRotation : MonoBehaviour {
                 return;
             }
 
-            transform.Rotate (new Vector3 (0, 0, -player.speed));
+            transform.RotateAround (planet.position, new Vector3 (0, 0, 1), -player.speed);
         }
 	}
 }

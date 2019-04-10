@@ -4,7 +4,7 @@ public class Ship : BaseEntity {
 
     public GameObject projectilePrefab;
 
-    public GameObject shipRotation;
+    public Transform planet;
 
     Vector3 leftBottomCorner;
     Vector3 topRightCorner;
@@ -46,7 +46,7 @@ public class Ship : BaseEntity {
 	}
 
 	public void Shoot() {
-        Vector3 direction = transform.position - shipRotation.transform.position;
+        Vector3 direction = transform.position - planet.position;
         Projectile p = Instantiate (projectilePrefab).GetComponent<Projectile> ();
         p.transform.position = transform.position;
         direction.Normalize ();
