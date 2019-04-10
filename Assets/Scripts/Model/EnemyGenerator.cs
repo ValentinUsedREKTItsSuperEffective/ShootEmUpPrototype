@@ -94,7 +94,6 @@ public class EnemyGenerator : MonoBehaviour {
             GameObject enemyPivot = Instantiate (currentWaveInfo.prefab);
             enemyPivot.transform.parent = planet.transform;
             Shooter shooter = enemyPivot.transform.Find ("Shooter").GetComponent<Shooter> ();
-            shooter.player = player;
             shooter.generator = this;
 
             int angleIndex;

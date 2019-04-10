@@ -4,7 +4,6 @@ using DG.Tweening;
 public class Shooter : Enemy {
     
     public GameObject projectilePrefab;
-    [HideInInspector] public GameObject player;
 
     float reloadingTime;
     bool invulnerability;
@@ -36,7 +35,7 @@ public class Shooter : Enemy {
     }
 
     void Shoot() {
-        Vector3 direction = player.transform.position - transform.position;
+        Vector3 direction = transform.parent.position - transform.position;
         Projectile p = Instantiate (projectilePrefab).GetComponent<Projectile> ();
         p.transform.position = transform.position;
         direction.Normalize ();
