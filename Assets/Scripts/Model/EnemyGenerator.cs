@@ -91,9 +91,8 @@ public class EnemyGenerator : MonoBehaviour {
     // TODO : Generer un ennemi de chaque type
     void Generate(int numberOfEnnemies){
         for (int i = 0; i < numberOfEnnemies; i++) {
-            GameObject enemyPivot = Instantiate (currentWaveInfo.prefab);
-            enemyPivot.transform.parent = planet.transform;
-            Shooter shooter = enemyPivot.transform.Find ("Shooter").GetComponent<Shooter> ();
+            Shooter shooter = Instantiate (currentWaveInfo.prefab).GetComponent<Shooter>();
+            shooter.transform.parent = planet.transform;
             shooter.generator = this;
 
             int angleIndex;
@@ -103,7 +102,7 @@ public class EnemyGenerator : MonoBehaviour {
 
             enemyPartitionSpace[angleIndex] = false;
             shooter.spaceIndex = angleIndex;
-            enemyPivot.transform.Rotate (new Vector3 (0, 0, (angleIndex - halfSpaceAngleSize)*4));
+            shooter.transform.RotateAround (planet.transform.position, new Vector3 (0, 0, 1), (angleIndex - halfSpaceAngleSize) * 4);
 
             Vector3 finalPosition = shooter.transform.position - planet.transform.position;
             finalPosition.Normalize ();

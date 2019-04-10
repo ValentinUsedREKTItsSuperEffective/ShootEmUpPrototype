@@ -9,7 +9,7 @@ public abstract class Enemy : BaseEntity {
         base.Hit (projectile);
 
         if (currentLife <= 0) {
-            Destroy (transform.parent.gameObject);
+            Destroy (gameObject);
             generator.onEnemyKilled.OnNext (spaceIndex);
         }
     }

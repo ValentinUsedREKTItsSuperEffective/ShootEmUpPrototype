@@ -30,7 +30,7 @@ public class Shooter : Enemy {
         transform.DOMove (finalPosition, 0.4f).From (true).SetEase (Ease.OutQuint).OnComplete (() => {
             invulnerability = false;
         });
-        transform.DOScaleY (1, 0.4f).From (true);
+        transform.DOScaleY (1, 0.1f).From (true);
         transform.DOPlay ();
     }
 
