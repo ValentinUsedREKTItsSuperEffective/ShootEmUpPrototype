@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 using UniRx;
 using DG.Tweening;
@@ -22,10 +23,14 @@ public class EnemyGenerator : MonoBehaviour {
     int halfSpaceAngleSize;
     bool[] enemyPartitionSpace;
 
-    float respawnTimer;
+    CompositeDisposable disposables;
 
-	// Use this for initialization
-	void Start() {
+    void Awake() {
+        disposables = new CompositeDisposable ();
+    }
+
+    // Use this for initialization
+    void Start() {
         // !BETTER NOT DOING THIS HERE!
         DOTween.Init ();
 
@@ -45,7 +50,6 @@ public class EnemyGenerator : MonoBehaviour {
                 waveIndex++;
 
                 if(waveIndex < waves.Count){
-                    Debug.Log ("Wave : " + waveIndex);
                     InitializeNextWave ();
                 }
             }
@@ -54,18 +58,6 @@ public class EnemyGenerator : MonoBehaviour {
         waveIndex = 0;
         InitializeNextWave ();
 	}
-
-    void Update() {
-        respawnTimer += Time.deltaTime;
-
-        while(respawnTimer > currentWaveInfo.respawnRate){
-            respawnTimer -= currentWaveInfo.respawnRate;
-
-            if(remainingSpawn > 0 && HaveSpace ()){
-                Generate (1);
-            }
-        }
-    }
 
     bool HaveSpace(){
         for (int i = 0; i < enemyPartitionSpace.Length; i++){
@@ -78,10 +70,16 @@ public class EnemyGenerator : MonoBehaviour {
     }
 
     void InitializeNextWave(){
+        disposables.Clear ();
+
         currentWave = waves[waveIndex];
         currentWaveInfo = currentWave.infos[0];
         remainingSpawn = remainingEnemy = currentWaveInfo.number;
-        respawnTimer = 0;
+        Observable.Timer (TimeSpan.FromSeconds (0), TimeSpan.FromSeconds (currentWaveInfo.respawnRate)).Subscribe (_ => {
+            if (remainingSpawn > 0 && HaveSpace ()) {
+                Generate (1);
+            }
+        }).AddTo(disposables);
 
         // TODO : Generate enemy of each type
         Generate (currentWaveInfo.initialNumber);
@@ -97,7 +95,7 @@ public class EnemyGenerator : MonoBehaviour {
 
             int angleIndex;
             do {
-                angleIndex = Random.Range (0, spaceAngleSize);
+                angleIndex = UnityEngine.Random.Range (0, spaceAngleSize);
             } while (enemyPartitionSpace[angleIndex] == false);
 
             enemyPartitionSpace[angleIndex] = false;
