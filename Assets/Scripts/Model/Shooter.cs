@@ -8,8 +8,17 @@ public class Shooter : Enemy {
     float reloadingTime;
     bool invulnerability;
 
+    public Vector3 finalPosition;
+
     public override void Generate(){
-        
+        invulnerability = true;
+
+        transform.localScale.Set (1, 3, 1);
+        transform.DOMove (finalPosition, 0.4f).From (true).SetEase (Ease.OutQuint).OnComplete (() => {
+            invulnerability = false;
+        });
+        transform.DOScaleY (1, 0.1f).From (true);
+        transform.DOPlay ();
     }
 
     void Update() {
@@ -21,17 +30,6 @@ public class Shooter : Enemy {
             reloadingTime = 0f;
             Shoot ();
         }
-    }
-
-    public void PerformArrival(Vector3 finalPosition) {
-        invulnerability = true;
-
-        transform.localScale.Set (1, 3, 1);
-        transform.DOMove (finalPosition, 0.4f).From (true).SetEase (Ease.OutQuint).OnComplete (() => {
-            invulnerability = false;
-        });
-        transform.DOScaleY (1, 0.1f).From (true);
-        transform.DOPlay ();
     }
 
     void Shoot() {

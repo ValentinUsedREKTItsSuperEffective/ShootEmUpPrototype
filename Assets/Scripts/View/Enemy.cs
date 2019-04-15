@@ -2,8 +2,13 @@
 
 public abstract class Enemy : BaseEntity {
 
-    [HideInInspector] public EnemyGenerator generator;
+    [HideInInspector] public WaveController generator;
     [HideInInspector] public int spaceIndex;
+
+    public virtual void InitializeEnemy(WaveController generator, int index){
+        this.generator = generator;
+        spaceIndex = index;
+    }
 
     public override void Hit(Projectile projectile) {
         base.Hit (projectile);

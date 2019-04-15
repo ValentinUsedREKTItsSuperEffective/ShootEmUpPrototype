@@ -7,7 +7,7 @@ using DG.Tweening;
 // Est-ce qu'il faudrait pas mieux dissocier cette classe en 2 ?
 // Une classe qui gère les vagues
 // Une classe dont hériterait chaque type d'ennemi pour instancier ces objets en jeu
-public class EnemyGenerator : MonoBehaviour {
+public class WaveController : MonoBehaviour {
 
     public GameObject player;
     public GameObject planet;
@@ -75,20 +75,21 @@ public class EnemyGenerator : MonoBehaviour {
     // TODO : Generer un ennemi de chaque type
     void Generate(int numberOfEnnemies){
         for (int i = 0; i < numberOfEnnemies; i++) {
-            Shooter shooter = Instantiate (currentWaveInfo.prefab).GetComponent<Shooter>();
-            shooter.transform.parent = planet.transform;
-            shooter.generator = this;
-
             int angleIndex = spacePartition.findSpace ();
-            shooter.spaceIndex = angleIndex;
+
+            Shooter shooter = Instantiate (currentWaveInfo.prefab).GetComponent<Shooter>();
+            shooter.InitializeEnemy (this, angleIndex);
+            shooter.transform.parent = planet.transform;
             shooter.transform.RotateAround (planet.transform.position, new Vector3 (0, 0, 1), (angleIndex -spacePartition.halfSpaceAngleSize) * 4);
 
             Vector3 finalPosition = shooter.transform.position - planet.transform.position;
             finalPosition.Normalize ();
             finalPosition *= 4f;
-            shooter.PerformArrival (finalPosition);
+            shooter.finalPosition = finalPosition;
 
             remainingSpawn--;
+
+            shooter.Generate ();
         }
     }
 }
