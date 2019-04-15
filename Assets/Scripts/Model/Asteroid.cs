@@ -19,4 +19,16 @@ public class Asteroid : Enemy {
             transform.position.z
         );
 	}
+
+    void OnTriggerEnter2D(Collider2D other) {
+        if (other.GetComponent<Ship> () != null) {
+            Debug.Log ("COLLIDE SHIP : INFLICT DAMAGE TO THE SHIP");
+            Destroy (gameObject);
+            generator.onEnemyKilled.OnNext (spaceIndex);
+        } else if (other.GetComponent<Planet>() != null){
+            Debug.Log ("COLLIDE PLANET: Inflict DAMAGE TO THE PLANET");
+            Destroy (gameObject);
+            generator.onEnemyKilled.OnNext (spaceIndex);
+        };
+    }
 }
