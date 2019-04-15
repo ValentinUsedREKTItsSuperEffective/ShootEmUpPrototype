@@ -15,7 +15,6 @@ public class WaveController : MonoBehaviour {
     SpacePartition spacePartition;
 
     public List<EnemyWave> waves;
-    EnemyWave currentWave;
     int waveIndex;
     WaveInfo currentWaveInfo;
 
@@ -58,8 +57,9 @@ public class WaveController : MonoBehaviour {
     void InitializeNextWave(){
         disposables.Clear ();
 
-        currentWave = waves[waveIndex];
-        currentWaveInfo = currentWave.infos[0];
+
+
+        currentWaveInfo = waves[waveIndex].infos[0];
         remainingSpawn = remainingEnemy = currentWaveInfo.number;
         Observable.Timer (TimeSpan.FromSeconds (0), TimeSpan.FromSeconds (currentWaveInfo.respawnRate)).Subscribe (_ => {
             if (remainingSpawn > 0 && spacePartition.haveSpace ()) {
