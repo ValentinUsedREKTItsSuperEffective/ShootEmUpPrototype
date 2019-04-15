@@ -4,10 +4,15 @@ using System.Collections.Generic;
 using UniRx;
 using DG.Tweening;
 
+// Est-ce qu'il faudrait pas mieux dissocier cette classe en 2 ?
+// Une classe qui gère les vagues
+// Une classe dont hériterait chaque type d'ennemi pour instancier ces objets en jeu
 public class EnemyGenerator : MonoBehaviour {
 
     public GameObject player;
     public GameObject planet;
+
+    SpacePartition spacePartition;
 
     public List<EnemyWave> waves;
     EnemyWave currentWave;
@@ -19,32 +24,23 @@ public class EnemyGenerator : MonoBehaviour {
     int remainingSpawn;
     int remainingEnemy;
 
-    int spaceAngleSize;
-    int halfSpaceAngleSize;
-    bool[] enemyPartitionSpace;
-
     CompositeDisposable disposables;
 
     void Awake() {
+        // !BETTER NOT DOING THIS HERE!
+        DOTween.Init ();
+
         disposables = new CompositeDisposable ();
+
+        spacePartition = new SpacePartition ();
     }
 
     // Use this for initialization
     void Start() {
-        // !BETTER NOT DOING THIS HERE!
-        DOTween.Init ();
-
-        spaceAngleSize = 7; 
-        halfSpaceAngleSize = spaceAngleSize / 2; // for change range of indexes
-        enemyPartitionSpace = new bool[spaceAngleSize];
-        for (int i = 0; i < spaceAngleSize; i++){
-            enemyPartitionSpace.SetValue (true, i);
-        }
-
         onEnemyKilled = new Subject<int> ();
         onEnemyKilled.Subscribe (index => {
             remainingEnemy--;
-            enemyPartitionSpace[index] = true;
+            spacePartition.freeSpaceAtIndex (index);
 
             if(remainingEnemy == 0){
                 waveIndex++;
@@ -59,16 +55,6 @@ public class EnemyGenerator : MonoBehaviour {
         InitializeNextWave ();
 	}
 
-    bool HaveSpace(){
-        for (int i = 0; i < enemyPartitionSpace.Length; i++){
-            if(enemyPartitionSpace[i] == true){
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     void InitializeNextWave(){
         disposables.Clear ();
 
@@ -76,8 +62,8 @@ public class EnemyGenerator : MonoBehaviour {
         currentWaveInfo = currentWave.infos[0];
         remainingSpawn = remainingEnemy = currentWaveInfo.number;
         Observable.Timer (TimeSpan.FromSeconds (0), TimeSpan.FromSeconds (currentWaveInfo.respawnRate)).Subscribe (_ => {
-            if (remainingSpawn > 0 && HaveSpace ()) {
-                Generate (1);
+            if (remainingSpawn > 0 && spacePartition.haveSpace ()) {
+                Generate (1); // On ne sait pas vraiment quel type d'ennemi on doit pondre ...
             }
         }).AddTo(disposables);
 
@@ -93,14 +79,9 @@ public class EnemyGenerator : MonoBehaviour {
             shooter.transform.parent = planet.transform;
             shooter.generator = this;
 
-            int angleIndex;
-            do {
-                angleIndex = UnityEngine.Random.Range (0, spaceAngleSize);
-            } while (enemyPartitionSpace[angleIndex] == false);
-
-            enemyPartitionSpace[angleIndex] = false;
+            int angleIndex = spacePartition.findSpace ();
             shooter.spaceIndex = angleIndex;
-            shooter.transform.RotateAround (planet.transform.position, new Vector3 (0, 0, 1), (angleIndex - halfSpaceAngleSize) * 4);
+            shooter.transform.RotateAround (planet.transform.position, new Vector3 (0, 0, 1), (angleIndex -spacePartition.halfSpaceAngleSize) * 4);
 
             Vector3 finalPosition = shooter.transform.position - planet.transform.position;
             finalPosition.Normalize ();
