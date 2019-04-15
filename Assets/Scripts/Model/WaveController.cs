@@ -16,7 +16,6 @@ public class WaveController : MonoBehaviour {
 
     public List<EnemyWave> waves;
     int waveIndex;
-    WaveInfo currentWaveInfo;
 
     public Subject<int> onEnemyKilled;
 
@@ -57,37 +56,30 @@ public class WaveController : MonoBehaviour {
     void InitializeNextWave(){
         disposables.Clear ();
 
-        currentWaveInfo = waves[waveIndex].infos[0];
-        remainingSpawn = remainingEnemy = currentWaveInfo.number;
-        Observable.Timer (TimeSpan.FromSeconds (0), TimeSpan.FromSeconds (currentWaveInfo.respawnRate)).Subscribe (_ => {
-            if (remainingSpawn > 0 && spacePartition.haveSpace ()) {
-                Generate (); // On ne sait pas vraiment quel type d'ennemi on doit pondre ...
-            }
-        }).AddTo(disposables);
+        waves[waveIndex].infos.ForEach ((info) => {
+            remainingSpawn += info.number;
+            remainingEnemy += info.number;
 
-        // TODO : Generate enemy of each type
-        for (int i = 0; i < currentWaveInfo.initialNumber; i++) {
-            Generate ();
-        }
+            Observable.Timer (TimeSpan.FromSeconds (0), TimeSpan.FromSeconds (info.respawnRate)).Subscribe (_ => {
+                if (remainingSpawn > 0 && spacePartition.haveSpace ()) {
+                    Generate (info);
+                }
+            }).AddTo (disposables);
+
+            for (int i = 0; i < info.initialNumber; i++) {
+                Generate (info);
+            }
+        });
     }
 
-    // TODO : Rendre la fonction Generate propre à la classe Enemy + fonction abstraite, chaque classe fille réecrit sa facon de s'instancier
-    // TODO : Generer un ennemi de chaque type
-    void Generate(){
+    void Generate(WaveInfo info){
         int angleIndex = spacePartition.findSpace ();
 
-        Shooter shooter = Instantiate (currentWaveInfo.prefab).GetComponent<Shooter>();
-        shooter.InitializeEnemy (this, angleIndex);
-        shooter.transform.parent = planet.transform;
-        shooter.transform.RotateAround (planet.transform.position, new Vector3 (0, 0, 1), (angleIndex -spacePartition.halfSpaceAngleSize) * 4);
-
-        Vector3 finalPosition = shooter.transform.position - planet.transform.position;
-        finalPosition.Normalize ();
-        finalPosition *= 4f;
-        shooter.finalPosition = finalPosition;
+        Enemy enemy = Instantiate (info.prefab).GetComponent<Enemy> ();
+        enemy.InitializeEnemy (this, angleIndex, planet.transform);
+        enemy.transform.RotateAround (planet.transform.position, new Vector3 (0, 0, 1), (angleIndex - spacePartition.halfSpaceAngleSize) * 4);
+        enemy.Generate ();
 
         remainingSpawn--;
-
-        shooter.Generate ();
     }
 }

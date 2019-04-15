@@ -8,10 +8,12 @@ public class Shooter : Enemy {
     float reloadingTime;
     bool invulnerability;
 
-    public Vector3 finalPosition;
-
     public override void Generate(){
         invulnerability = true;
+
+        Vector3 finalPosition = transform.position - transform.parent.position;
+        finalPosition.Normalize ();
+        finalPosition *= 4f;
 
         transform.localScale.Set (1, 3, 1);
         transform.DOMove (finalPosition, 0.4f).From (true).SetEase (Ease.OutQuint).OnComplete (() => {
