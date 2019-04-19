@@ -53,8 +53,8 @@ public class Ship : BaseEntity {
         p.InitProjectile (direction, tag);
     }
 
-    public override void Hit(Projectile projectile){
-        base.Hit (projectile);
+    public override void Hit(int damage){
+        base.Hit (damage);
 
         //Debug.Log ("Ship Shield : " + currentShield + ", Life : " + model.life);
     }

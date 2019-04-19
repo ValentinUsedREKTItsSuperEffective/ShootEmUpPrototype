@@ -42,11 +42,11 @@ public class Shooter : Enemy {
         p.InitProjectile (direction, tag);
     }
 
-    public override void Hit(Projectile projectile) {
+    public override void Hit(int damage) {
         if (invulnerability) {
             return;
         }
 
-        base.Hit (projectile);
+        base.Hit (damage);
     }
 }

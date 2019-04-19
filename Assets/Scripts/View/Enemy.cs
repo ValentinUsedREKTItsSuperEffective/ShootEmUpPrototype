@@ -11,8 +11,8 @@ public abstract class Enemy : BaseEntity {
         transform.parent = parent;
     }
 
-    public override void Hit(Projectile projectile) {
-        base.Hit (projectile);
+    public override void Hit(int damage) {
+        base.Hit (damage);
 
         if (currentLife <= 0) {
             Destroy (gameObject);

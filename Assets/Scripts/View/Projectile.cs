@@ -35,7 +35,7 @@ public class Projectile : MonoBehaviour {
         BaseEntity entity = other.GetComponent<BaseEntity> ();
 
         if (entity != null && entityTag != entity.tag) {
-            entity.Hit (this);
+            entity.Hit (model.damage);
             Destroy (gameObject);
         }
 	}
