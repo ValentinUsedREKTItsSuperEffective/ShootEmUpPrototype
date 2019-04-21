@@ -2,10 +2,10 @@
 
 public class Projectile : MonoBehaviour {
 
-    public ProjectileModel model;
-    public string entityTag;
+    [HideInInspector] public string entityTag;
 
     Vector3 direction;
+    int damage;
 
     float topPoint;
 
@@ -13,12 +13,12 @@ public class Projectile : MonoBehaviour {
         topPoint = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0.0f)).y;
 	}
 
-    public void InitProjectile(Vector3 direction, string originTag) {
+    public void InitProjectile(int damage, float projectileSpeed, Vector3 direction, string originTag) {
+        this.damage = damage;
         this.direction = direction;
         entityTag = originTag;
 
-        float stepMovement = model.speed * Time.fixedDeltaTime;
-
+        float stepMovement = projectileSpeed * Time.fixedDeltaTime;
         this.direction *= stepMovement;
 
     }
@@ -35,7 +35,7 @@ public class Projectile : MonoBehaviour {
         BaseEntity entity = other.GetComponent<BaseEntity> ();
 
         if (entity != null && entityTag != entity.tag) {
-            entity.Hit (model.damage);
+            entity.Hit (damage);
             Destroy (gameObject);
         }
 	}

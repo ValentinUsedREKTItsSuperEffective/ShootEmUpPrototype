@@ -50,7 +50,7 @@ public class Ship : BaseEntity {
         Projectile p = Instantiate (projectilePrefab).GetComponent<Projectile> ();
         p.transform.position = transform.position;
         direction.Normalize ();
-        p.InitProjectile (direction, tag);
+        p.InitProjectile (model.damage, model.fireSpeed, direction, tag);
     }
 
     public override void Hit(int damage){

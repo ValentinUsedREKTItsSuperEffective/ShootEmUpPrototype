@@ -5,7 +5,10 @@ public class EntityModel : ScriptableObject {
 
     public float life;
     public float speed;
+
+    public int damage;
     public float fireRate;
+    public float fireSpeed;
 
     public float shield;
     public float shieldRegen; // per second
