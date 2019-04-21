@@ -5,12 +5,12 @@ public class Projectile : MonoBehaviour {
     [HideInInspector] public string entityTag;
 
     Vector3 direction;
-    int damage;
+    protected int damage;
 
     float topPoint;
 
 	void Awake() {
-        topPoint = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0.0f)).y;
+        topPoint = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0.0f)).y + 5;
 	}
 
     public void InitProjectile(int damage, float projectileSpeed, Vector3 direction, string originTag) {
@@ -31,7 +31,7 @@ public class Projectile : MonoBehaviour {
         }
 	}
 
-    void OnTriggerEnter2D(Collider2D other) {
+    protected virtual void OnTriggerEnter2D(Collider2D other) {
         BaseEntity entity = other.GetComponent<BaseEntity> ();
 
         if (entity != null && entityTag != entity.tag) {
