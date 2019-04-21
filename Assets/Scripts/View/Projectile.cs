@@ -20,7 +20,6 @@ public class Projectile : MonoBehaviour {
 
         float stepMovement = projectileSpeed * Time.fixedDeltaTime;
         this.direction *= stepMovement;
-
     }
 
 	void FixedUpdate() {
