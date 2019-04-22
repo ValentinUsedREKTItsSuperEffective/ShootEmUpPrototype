@@ -46,10 +46,20 @@ public class Ship : BaseEntity {
 	}
 
 	public void Shoot() {
-        Vector3 direction = transform.position - planet.position;
         Projectile p = Instantiate (projectilePrefab).GetComponent<Projectile> ();
         p.transform.position = transform.position;
+
+        Vector3 direction = transform.position - planet.position;
         direction.Normalize ();
+
+        Vector3 center = direction * model.fireDispersion + transform.position + direction;
+        float xRand = Random.Range (0f, Mathf.PI);
+        float yRand = Random.Range (0f, Mathf.PI);
+        Vector3 randomPoint = new Vector3 (Mathf.Cos (xRand), Mathf.Sin (yRand), 0f) * model.fireDispersion + center;
+
+        direction = randomPoint - transform.position;
+        direction.Normalize ();
+
         p.InitProjectile (model.damage, model.fireSpeed, direction, tag);
     }
 

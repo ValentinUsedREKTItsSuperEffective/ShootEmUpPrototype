@@ -9,6 +9,7 @@ public class EntityModel : ScriptableObject {
     public int damage;
     public float fireRate;
     public float fireSpeed;
+    public float fireDispersion; // circle ray
 
     public float shield;
     public float shieldRegen; // per second
