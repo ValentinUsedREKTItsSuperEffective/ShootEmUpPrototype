@@ -12,7 +12,7 @@ public class WaveController : MonoBehaviour {
     public GameObject player;
     public GameObject planet;
 
-    SpacePartition spacePartition;
+    GameGrid spacePartition;
 
     public List<EnemyWave> waves;
     int waveIndex;
@@ -30,7 +30,7 @@ public class WaveController : MonoBehaviour {
 
         disposables = new CompositeDisposable ();
 
-        spacePartition = new SpacePartition ();
+        spacePartition = new GameGrid ();
     }
 
     // Use this for initialization
@@ -38,7 +38,7 @@ public class WaveController : MonoBehaviour {
         onEnemyKilled = new Subject<int> ();
         onEnemyKilled.Subscribe (index => {
             remainingEnemy--;
-            spacePartition.freeSpaceAtIndex (index);
+            spacePartition.FreeSpaceAtIndex (index);
 
             if(remainingEnemy == 0){
                 waveIndex++;
@@ -61,7 +61,7 @@ public class WaveController : MonoBehaviour {
             remainingEnemy += info.number;
 
             Observable.Timer (TimeSpan.FromSeconds (0), TimeSpan.FromSeconds (info.respawnRate)).Subscribe (_ => {
-                if (remainingSpawn > 0 && spacePartition.haveSpace ()) {
+                if (remainingSpawn > 0 && spacePartition.HaveSpace ()) {
                     Generate (info);
                 }
             }).AddTo (disposables);
@@ -73,7 +73,7 @@ public class WaveController : MonoBehaviour {
     }
 
     void Generate(WaveInfo info){
-        int angleIndex = spacePartition.findSpace ();
+        int angleIndex = spacePartition.FindSpace ();
 
         Enemy enemy = Instantiate (info.prefab).GetComponent<Enemy> ();
         enemy.InitializeEnemy (this, angleIndex, planet.transform);
