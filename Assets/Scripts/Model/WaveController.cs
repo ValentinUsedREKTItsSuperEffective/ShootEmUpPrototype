@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using UniRx;
 using DG.Tweening;
 
-// Est-ce qu'il faudrait pas mieux dissocier cette classe en 2 ?
-// Une classe qui gère les vagues
-// Une classe dont hériterait chaque type d'ennemi pour instancier ces objets en jeu
 public class WaveController : MonoBehaviour {
 
     public GameObject player;
@@ -30,10 +27,9 @@ public class WaveController : MonoBehaviour {
 
         disposables = new CompositeDisposable ();
 
-        spacePartition = new GameGrid ();
+        spacePartition = new GameGrid (planet.transform);
     }
 
-    // Use this for initialization
     void Start() {
         onEnemyKilled = new Subject<int> ();
         onEnemyKilled.Subscribe (index => {
@@ -73,11 +69,15 @@ public class WaveController : MonoBehaviour {
     }
 
     void Generate(WaveInfo info){
-        int angleIndex = spacePartition.FindSpace ();
+        GridCase gc = spacePartition.FindSpace (); 
 
         Enemy enemy = Instantiate (info.prefab).GetComponent<Enemy> ();
-        enemy.InitializeEnemy (this, angleIndex, planet.transform);
-        enemy.transform.RotateAround (planet.transform.position, new Vector3 (0, 0, 1), (angleIndex - spacePartition.halfSpaceAngleSize) * 4);
+        enemy.InitializeEnemy (this, gc.index, planet.transform);
+        enemy.transform.position = gc.position;
+
+        // Same as LookAt *Blow my mind*
+        enemy.transform.right = planet.transform.position - enemy.transform.position;
+
         enemy.Generate ();
 
         remainingSpawn--;
