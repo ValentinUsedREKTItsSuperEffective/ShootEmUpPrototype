@@ -6,7 +6,11 @@ public abstract class BaseEntity : MonoBehaviour {
 
     protected float currentLife;
     protected float currentShield;
-    
+
+    void Awake() {
+        currentLife = model.life;
+    }
+
     public virtual void Hit(int damage) {
         if (currentShield > 0) {
             currentShield -= damage;
