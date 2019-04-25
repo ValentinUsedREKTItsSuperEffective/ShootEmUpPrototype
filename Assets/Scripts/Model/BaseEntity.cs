@@ -8,6 +8,11 @@ public abstract class BaseEntity : MonoBehaviour {
     protected float currentShield;
 
     void Awake() {
+        if (model == null) { 
+            Debug.Log (name + "'s model is not defined !!");
+            return;
+        }
+
         currentLife = model.life;
     }
 
