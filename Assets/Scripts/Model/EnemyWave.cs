@@ -6,6 +6,7 @@ using UnityEngine;
 public class WaveInfo {
     public EntityModel enemyType;
     public GameObject prefab;
+    public int depth;
     public int number;
     public float respawnRate;
     public int initialNumber;

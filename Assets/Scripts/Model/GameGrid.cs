@@ -18,6 +18,7 @@ public class GameGrid {
     Transform planetCenter;
 
     readonly int minDistance;
+    readonly int depth;
     readonly int angle;
 
     int spaceAngleSize;
@@ -26,7 +27,8 @@ public class GameGrid {
     public GameGrid(Transform center) {
         planetCenter = center;
 
-        minDistance = 7;
+        minDistance = 6;
+        depth = 2;
         angle = 26;
 
         spaceAngleSize = 7;
@@ -38,11 +40,14 @@ public class GameGrid {
         float stepAngle = angle / (float)spaceAngleSize;
         float startAngle = -angle / 2 + stepAngle / 2;
 
-        for (int i = 0; i < spaceAngleSize; i++) {
-            GridCase c = new GridCase (i);
-            c.position.Set (0f, minDistance, 0f);
-            c.position = RotateAroundPoint(c.position, planetCenter.position, new Vector3(0f, 0f, startAngle + stepAngle * i));
-            grid.Add (c);
+        int index = 0;
+        for (int d = 0; d < depth; d++){
+            for (int i = 0; i < spaceAngleSize; i++, index++) {
+                GridCase c = new GridCase (index);
+                c.position.Set (0f, minDistance + d, 0f);
+                c.position = RotateAroundPoint (c.position, planetCenter.position, new Vector3 (0f, 0f, startAngle + stepAngle * i));
+                grid.Add (c);
+            }
         }
     }
 
@@ -54,8 +59,9 @@ public class GameGrid {
         grid[index].free = true;
     }
 
-    public bool HaveSpace() {
-        for (int i = 0; i < grid.Count; i++) {
+    public bool HaveSpace(int depth) {
+        Debug.Log ("[" + (depth * spaceAngleSize) + ", " + (depth * spaceAngleSize + spaceAngleSize) + "[");
+        for (int i = depth * spaceAngleSize; i < depth * spaceAngleSize + spaceAngleSize; i++) {
             if (grid[i].free == true) {
                 return true;
             }
@@ -64,10 +70,10 @@ public class GameGrid {
         return false;
     }
 
-    public GridCase FindSpace(){
+    public GridCase FindSpace(int depth){
         int index;
         do {
-            index = Random.Range (0, spaceAngleSize);
+            index = Random.Range (depth * spaceAngleSize, depth * spaceAngleSize + spaceAngleSize);
         } while (grid[index].free == false);
 
         grid[index].free = false;

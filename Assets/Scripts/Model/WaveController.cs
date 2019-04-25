@@ -57,7 +57,7 @@ public class WaveController : MonoBehaviour {
             remainingEnemy += info.number;
 
             Observable.Timer (TimeSpan.FromSeconds (0), TimeSpan.FromSeconds (info.respawnRate)).Subscribe (_ => {
-                if (remainingSpawn > 0 && spacePartition.HaveSpace ()) {
+                if (remainingSpawn > 0 && spacePartition.HaveSpace (info.depth)) {
                     Generate (info);
                 }
             }).AddTo (disposables);
@@ -69,7 +69,7 @@ public class WaveController : MonoBehaviour {
     }
 
     void Generate(WaveInfo info){
-        GridCase gc = spacePartition.FindSpace (); 
+        GridCase gc = spacePartition.FindSpace (info.depth); 
 
         Enemy enemy = Instantiate (info.prefab).GetComponent<Enemy> ();
         enemy.InitializeEnemy (this, gc.index, planet.transform);
