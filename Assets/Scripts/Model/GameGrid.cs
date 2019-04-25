@@ -72,7 +72,6 @@ public class GameGrid {
 
         grid[index].free = false;
 
-        // TODO: Renvoyer la case plutot que l'index
         return grid[index];
     }
 }
