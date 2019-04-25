@@ -16,7 +16,6 @@ public class Ship : BaseEntity {
 	void Awake() {
         reloadingTime = 0f;
         currentLife = model.life;
-        currentShield = model.shield;
 
         topRightCorner = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0.0f));
         leftBottomCorner = topRightCorner * -1f;
@@ -24,12 +23,6 @@ public class Ship : BaseEntity {
 
     void FixedUpdate() {
         reloadingTime -= Time.fixedDeltaTime;
-
-        if(currentShield < model.shield) {
-            currentShield += model.shieldRegen * Time.fixedDeltaTime;
-        } else {
-            currentShield = model.shield;
-        }
 
         if (Input.GetKey (KeyCode.Space)){
             if (reloadingTime <= EPSILON) {

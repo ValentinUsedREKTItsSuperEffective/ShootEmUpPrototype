@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
 public class Projectile : MonoBehaviour {
-
+    
     [HideInInspector] public string entityTag;
 
     Vector3 direction;
-    protected int damage;
+    public int damage;
 
     float topPoint;
 
@@ -31,6 +31,16 @@ public class Projectile : MonoBehaviour {
 	}
 
     protected virtual void OnTriggerEnter2D(Collider2D other) {
+        Shield shield = other.GetComponent<Shield> ();
+
+        if(shield != null && entityTag != shield.tag){
+            shield.Hit (this);
+            if(damage <= 0){
+                Destroy (gameObject);
+            }
+            return;
+        }
+
         BaseEntity entity = other.GetComponent<BaseEntity> ();
 
         if (entity != null && entityTag != entity.tag) {
