@@ -9,12 +9,12 @@ public class Ship : BaseEntity {
     Vector3 leftBottomCorner;
     Vector3 topRightCorner;
 
-    float shotCooldown;
+    float reloadingTime;
 
     readonly float EPSILON = 0.00001f;
 
 	void Awake() {
-        shotCooldown = 0f;
+        reloadingTime = 0f;
         currentLife = model.life;
         currentShield = model.shield;
 
@@ -23,7 +23,7 @@ public class Ship : BaseEntity {
 	}
 
     void FixedUpdate() {
-        shotCooldown -= Time.fixedDeltaTime;
+        reloadingTime -= Time.fixedDeltaTime;
 
         if(currentShield < model.shield) {
             currentShield += model.shieldRegen * Time.fixedDeltaTime;
@@ -32,9 +32,9 @@ public class Ship : BaseEntity {
         }
 
         if (Input.GetKey (KeyCode.Space)){
-            if (shotCooldown <= EPSILON) {
+            if (reloadingTime <= EPSILON) {
                 Shoot ();
-                shotCooldown = 1f / model.fireRate;
+                reloadingTime = 1f / model.fireRate;
             }
         }
 

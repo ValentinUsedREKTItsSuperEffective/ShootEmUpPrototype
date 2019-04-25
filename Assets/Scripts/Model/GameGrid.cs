@@ -60,7 +60,6 @@ public class GameGrid {
     }
 
     public bool HaveSpace(int depth) {
-        Debug.Log ("[" + (depth * spaceAngleSize) + ", " + (depth * spaceAngleSize + spaceAngleSize) + "[");
         for (int i = depth * spaceAngleSize; i < depth * spaceAngleSize + spaceAngleSize; i++) {
             if (grid[i].free == true) {
                 return true;

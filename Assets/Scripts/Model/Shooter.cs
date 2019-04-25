@@ -8,7 +8,10 @@ public class Shooter : Enemy {
     float reloadingTime;
     bool invulnerability;
 
+    readonly float EPSILON = 0.00001f;
+
     public override void Generate(){
+        reloadingTime = 1.5f;
         invulnerability = true;
 
         Vector3 finalPosition = transform.position - transform.parent.position;
@@ -19,18 +22,20 @@ public class Shooter : Enemy {
         transform.DOMove (finalPosition, 0.4f).From (true).SetEase (Ease.OutQuint).OnComplete (() => {
             invulnerability = false;
         });
-        transform.DOScaleY (1, 0.1f).From (true);
+        transform.DOScaleX (1, 0.1f).From (true);
         transform.DOPlay ();
     }
 
     void Update() {
-        float reloadTime = 2f;
+        if(invulnerability){
+            return;
+        }
 
-        reloadingTime += Time.deltaTime;
+        reloadingTime -= Time.deltaTime;
 
-        if (reloadingTime >= reloadTime) {
-            reloadingTime = 0f;
+        if (reloadingTime <= EPSILON) {
             Shoot ();
+            reloadingTime = 1f / model.fireRate;
         }
     }
 
