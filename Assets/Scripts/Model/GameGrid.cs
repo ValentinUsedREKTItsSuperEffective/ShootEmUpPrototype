@@ -21,7 +21,6 @@ public class GameGrid {
     readonly int angle;
 
     int spaceAngleSize;
-    public int halfSpaceAngleSize;
     readonly List<GridCase> grid;
 
     public GameGrid(Transform center) {
@@ -31,7 +30,6 @@ public class GameGrid {
         angle = 26;
 
         spaceAngleSize = 7;
-        halfSpaceAngleSize = spaceAngleSize / 2;
         grid = new List<GridCase>();
         PopulateGrid ();
     }
