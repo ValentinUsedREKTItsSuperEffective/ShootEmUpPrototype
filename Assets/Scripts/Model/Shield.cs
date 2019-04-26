@@ -1,35 +1,31 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UniRx;
 
 public class Shield : MonoBehaviour {
 
     [SerializeField] EntityModel model;
 
     int currentShield;
-    float shieldBuffer;
+
+    Subject<Unit> shieldBreak;
 
     void Awake() {
         currentShield = model.shield;
-        shieldBuffer = 0f;
-    }
 
-    void FixedUpdate() {
-        // TODO : faire ça avec UniRx
-        if (currentShield < model.shield) {
-            shieldBuffer += model.shieldRegen * Time.fixedDeltaTime;
+        shieldBreak = new Subject<Unit> ();
+        shieldBreak.Subscribe (_ => {
+            gameObject.SetActive (false);
 
-            if(shieldBuffer > 1f){
-                currentShield +=  (int)shieldBuffer;
-                shieldBuffer -= (int)shieldBuffer;
+            Observable.Timer (TimeSpan.FromSeconds (model.shieldReloadCooldown)).Subscribe (__ => {
+                currentShield = (int)(model.shield * model.shieldReloadCapacity);
 
-                if(currentShield > model.shield){
-                    currentShield = model.shield;
-                }
+                gameObject.SetActive (true);
+                InitShieldRegen ();
+            });
+        }).AddTo (gameObject);
 
-                Debug.Log ("Shield up to " + currentShield);
-            }
-        }
-
-        // TODO : Reactivate the shield
+        InitShieldRegen ();
     }
 
     public void Hit(Projectile projectile){
@@ -41,12 +37,22 @@ public class Shield : MonoBehaviour {
                 currentShield = 0;
                 projectile.damage -= remainingShield;
 
-                gameObject.SetActive (false);
+                shieldBreak.OnNext (Unit.Default);
             } else {
                 projectile.damage = 0;
             }
         }
+    }
 
-        Debug.Log ("Shiled at " + currentShield);
+    void InitShieldRegen(){
+        Observable.Timer (TimeSpan.FromSeconds (0.0), TimeSpan.FromSeconds (1.0)).TakeUntil(shieldBreak).Subscribe (_ => {
+            if (currentShield < model.shield) {
+                currentShield += model.shieldRegen;
+
+                if (currentShield > model.shield) {
+                    currentShield = model.shield;
+                }
+            }
+        });
     }
 }

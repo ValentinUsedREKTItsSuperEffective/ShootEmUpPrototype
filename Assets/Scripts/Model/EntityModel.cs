@@ -13,4 +13,6 @@ public class EntityModel : ScriptableObject {
 
     public int shield;
     public int shieldRegen; // per second
+    public float shieldReloadCooldown;
+    public float shieldReloadCapacity; // percentage
 }
