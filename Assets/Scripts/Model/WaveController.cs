@@ -56,7 +56,7 @@ public class WaveController : MonoBehaviour {
             remainingSpawn += info.number;
             remainingEnemy += info.number;
 
-            Observable.Timer (TimeSpan.FromSeconds (0), TimeSpan.FromSeconds (info.respawnRate)).Subscribe (_ => {
+            Observable.Timer (TimeSpan.FromSeconds (info.respawnRate), TimeSpan.FromSeconds (info.respawnRate)).Subscribe (_ => {
                 if (remainingSpawn > 0 && spacePartition.HaveSpace (info.depth)) {
                     Generate (info);
                 }
