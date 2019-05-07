@@ -13,7 +13,7 @@ public class ShipRotation : MonoBehaviour {
                 return;
             }
 
-            transform.RotateAround (planet.position, new Vector3 (0, 0, 1), player.speed);
+            transform.RotateAround (planet.position, new Vector3 (0, 0, 1), 10f * player.speed);
         }
 
         if (Input.GetKey (KeyCode.RightArrow)) {
@@ -21,7 +21,7 @@ public class ShipRotation : MonoBehaviour {
                 return;
             }
 
-            transform.RotateAround (planet.position, new Vector3 (0, 0, 1), -player.speed);
+            transform.RotateAround (planet.position, new Vector3 (0, 0, 1), -10f * player.speed);
         }
 	}
 }
