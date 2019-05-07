@@ -14,7 +14,7 @@ public abstract class Enemy : BaseEntity {
     public override void Hit(int damage) {
         base.Hit (damage);
 
-        if (currentLife <= 0) {
+        if (model.currentLife.Value <= 0) {
             Destroy (gameObject);
             generator.onEnemyKilled.OnNext (spaceIndex);
         }

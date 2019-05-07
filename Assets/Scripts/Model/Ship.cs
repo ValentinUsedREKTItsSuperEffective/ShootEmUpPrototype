@@ -13,9 +13,12 @@ public class Ship : BaseEntity {
 
     readonly float EPSILON = 0.00001f;
 
-	void Awake() {
+    protected override void Awake() {
+        base.Awake ();
+
+        Debug.Log (model.currentLife);
+
         reloadingTime = 0f;
-        currentLife = model.life;
 
         topRightCorner = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0.0f));
         leftBottomCorner = topRightCorner * -1f;
@@ -59,6 +62,8 @@ public class Ship : BaseEntity {
     public override void Hit(int damage){
         base.Hit (damage);
 
-        //Debug.Log ("Ship Shield : " + currentShield + ", Life : " + model.life);
+        if (model.currentLife.Value <= 0) {
+            Destroy (gameObject);
+        }
     }
 }

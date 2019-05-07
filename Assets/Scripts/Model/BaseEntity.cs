@@ -1,21 +1,26 @@
 ﻿using UnityEngine;
+using UniRx;
 
 public abstract class BaseEntity : MonoBehaviour {
 
     public EntityModel model;
 
-    protected float currentLife;
-
-    void Awake() {
-        if (model == null) { 
+    protected virtual void Awake() {
+        if (model == null) {
             Debug.Log (name + "'s model is not defined !!");
             return;
         }
 
-        currentLife = model.life;
+        model.currentLife = new ReactiveProperty<float> ();
+        model.currentLife.Value = model.life;
     }
 
     public virtual void Hit(int damage) {
-        currentLife -= damage;
+        if (model == null) {
+            Debug.Log (name + "'s model is not defined !!");
+            return;
+        }
+
+        model.currentLife.Value -= damage;
     }
 }

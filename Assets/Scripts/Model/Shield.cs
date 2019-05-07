@@ -18,6 +18,10 @@ public class Shield : MonoBehaviour {
             gameObject.SetActive (false);
 
             Observable.Timer (TimeSpan.FromSeconds (model.shieldReloadCooldown)).Subscribe (__ => {
+                if(model.currentLife.Value <= 0){
+                    return;
+                }
+
                 currentShield = (int)(model.shield * model.shieldReloadCapacity);
 
                 gameObject.SetActive (true);
