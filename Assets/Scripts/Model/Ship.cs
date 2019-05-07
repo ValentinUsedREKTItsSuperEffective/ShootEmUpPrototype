@@ -2,6 +2,8 @@
 
 public class Ship : BaseEntity {
 
+    IEquipment equipment;
+
     public GameObject projectilePrefab;
 
     public Transform planet;
@@ -16,7 +18,9 @@ public class Ship : BaseEntity {
     protected override void Awake() {
         base.Awake ();
 
-        Debug.Log (model.currentLife);
+        equipment = new BaseEquipment ();
+        equipment = new BigRifle (equipment);
+        equipment = new BiggerRiffle (equipment);
 
         reloadingTime = 0f;
 
@@ -56,7 +60,7 @@ public class Ship : BaseEntity {
         direction = randomPoint - transform.position;
         direction.Normalize ();
 
-        p.InitProjectile (model.damage, model.fireSpeed, direction, tag);
+        p.InitProjectile (model.damage + equipment.GetDamage(), model.fireSpeed, direction, tag);
     }
 
     public override void Hit(int damage){
